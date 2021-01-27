@@ -1,2 +1,3 @@
-# realword-nuxtjs
-realword-nuxtjs CI/CD
+### 服务器地址
+
+http://47.111.174.109:3000/
