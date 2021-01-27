@@ -2,7 +2,7 @@
   <div class="home-page">
     <div class="banner">
       <div class="container">
-        <h1 class="logo-font">拉钩教育</h1>
+        <h1 class="logo-font">拉钩教育222222</h1>
         <p>A place to share your knowledge.</p>
       </div>
     </div>
@@ -16,14 +16,14 @@
                 <nuxt-link
                   class="nav-link"
                   :class="{
-                    active: tab === 'your_feed'
+                    active: tab === 'your_feed',
                   }"
                   exact
                   :to="{
                     name: 'home',
                     query: {
-                      tab: 'your_feed'
-                    }
+                      tab: 'your_feed',
+                    },
                   }"
                   >Your Feed</nuxt-link
                 >
@@ -32,11 +32,11 @@
                 <nuxt-link
                   class="nav-link"
                   :class="{
-                    active: tab === 'global_feed'
+                    active: tab === 'global_feed',
                   }"
                   exact
                   :to="{
-                    name: 'home'
+                    name: 'home',
                   }"
                   >Global Feed</nuxt-link
                 >
@@ -45,15 +45,15 @@
                 <nuxt-link
                   class="nav-link"
                   :class="{
-                    active: tab === 'tag'
+                    active: tab === 'tag',
                   }"
                   exact
                   :to="{
                     name: 'home',
                     query: {
                       tab: 'tag',
-                      tag: tag
-                    }
+                      tag: tag,
+                    },
                   }"
                   ># {{ tag }}</nuxt-link
                 >
@@ -71,8 +71,8 @@
                 :to="{
                   name: 'profile',
                   params: {
-                    username: article.author.username
-                  }
+                    username: article.author.username,
+                  },
                 }"
               ></nuxt-link>
               <div class="info">
@@ -81,20 +81,20 @@
                   :to="{
                     name: 'profile',
                     params: {
-                      username: article.author.username
-                    }
+                      username: article.author.username,
+                    },
                   }"
                 >
                   {{ article.author.username }}
                 </nuxt-link>
                 <span class="date">{{
-                  article.createdAt | date("YYYY-MM-DD")
+                  article.createdAt | date('YYYY-MM-DD')
                 }}</span>
               </div>
               <button
                 class="btn btn-outline-primary btn-sm pull-xs-right"
                 :class="{
-                  active: article.favorited
+                  active: article.favorited,
                 }"
                 @click="onFavorite(article)"
                 :disabled="article.favoriteDisabled"
@@ -106,8 +106,8 @@
               :to="{
                 name: 'article',
                 params: {
-                  slug: article.slug
-                }
+                  slug: article.slug,
+                },
               }"
               class="preview-link"
             >
@@ -128,8 +128,8 @@
                   name: 'home',
                   query: {
                     tab: 'tag',
-                    tag: item
-                  }
+                    tag: item,
+                  },
                 }"
                 class="tag-pill tag-default"
                 v-for="item in tags"
@@ -146,7 +146,7 @@
             <li
               class="page-item"
               :class="{
-                active: item === page
+                active: item === page,
               }"
               v-for="item in totalPage"
               :key="item"
@@ -158,8 +158,8 @@
                   query: {
                     page: item,
                     tag: $route.query.tag,
-                    tab: tab
-                  }
+                    tab: tab,
+                  },
                 }"
                 >{{ item }}</nuxt-link
               >
@@ -177,32 +177,32 @@ import {
   getArticles,
   getYourFeedArticles,
   addFavorite,
-  deleteFavorite
-} from "@/api/article";
-import { getTags } from "@/api/tag";
-import { mapState } from "vuex";
+  deleteFavorite,
+} from '@/api/article'
+import { getTags } from '@/api/tag'
+import { mapState } from 'vuex'
 export default {
-  name: "homeIndex",
+  name: 'homeIndex',
   async asyncData({ query }) {
-    const page = parseInt(query.page || 1);
-    const limit = 20;
-    const tab = query.tab || "global_feed";
-    const tag = query.tag;
+    const page = parseInt(query.page || 1)
+    const limit = 20
+    const tab = query.tab || 'global_feed'
+    const tag = query.tag
     const loadArticles =
-      tab === "global_feed" ? getArticles : getYourFeedArticles;
+      tab === 'global_feed' ? getArticles : getYourFeedArticles
     const [articleRes, tagRes] = await Promise.all([
       loadArticles({
         limit,
         offset: (page - 1) * limit,
-        tag
+        tag,
       }),
-      getTags()
-    ]);
+      getTags(),
+    ])
 
-    const { articles, articlesCount } = articleRes.data;
-    const { tags } = tagRes.data;
+    const { articles, articlesCount } = articleRes.data
+    const { tags } = tagRes.data
 
-    articles.forEach(article => (article.favoriteDisabled = false));
+    articles.forEach((article) => (article.favoriteDisabled = false))
 
     return {
       articles, // 文章列表
@@ -211,36 +211,36 @@ export default {
       limit, // 每页大小
       page, // 页码
       tab, // 选项卡
-      tag // 数据标签
-    };
-  },
-  watchQuery: ["page", "tag", "tab"],
-  computed: {
-    ...mapState(["user"]),
-    totalPage() {
-      return Math.ceil(this.articlesCount / this.limit);
+      tag, // 数据标签
     }
+  },
+  watchQuery: ['page', 'tag', 'tab'],
+  computed: {
+    ...mapState(['user']),
+    totalPage() {
+      return Math.ceil(this.articlesCount / this.limit)
+    },
   },
   created() {},
   mounted() {},
   methods: {
     async onFavorite(article) {
-      article.favoriteDisabled = true;
+      article.favoriteDisabled = true
       if (article.favorited) {
         // 取消点赞
-        await deleteFavorite(article.slug);
-        article.favorited = false;
-        article.favoritesCount += -1;
+        await deleteFavorite(article.slug)
+        article.favorited = false
+        article.favoritesCount += -1
       } else {
         // 添加点赞
-        await addFavorite(article.slug);
-        article.favorited = true;
-        article.favoritesCount += 1;
+        await addFavorite(article.slug)
+        article.favorited = true
+        article.favoritesCount += 1
       }
-      article.favoriteDisabled = false;
-    }
-  }
-};
+      article.favoriteDisabled = false
+    },
+  },
+}
 </script>
 
 <style scoped lang="less"></style>
